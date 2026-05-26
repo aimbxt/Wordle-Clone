@@ -1,0 +1,54 @@
+.grid-container {
+    width: 33.33vw;
+    height: 50vh;
+    box-sizing: border-box;
+    padding: 12px; /* Padding around the edge of the screen */
+}
+
+.main-grid {
+    display: grid;
+    align-self: center;
+  /* Creates 5 equal-width columns that scale with screen width */
+    grid-template-columns: repeat(5, 1fr);
+  
+  /* Creates 6 equal-height rows that scale with screen height */
+    grid-template-rows: repeat(6, 1fr);
+  
+  /* Makes the grid container fill its wrapper entirely */
+    width: 100%;
+    height: 100%;
+  
+  /* Gap scales dynamically between 8px and 16px depending on screen size */
+    gap: 6px
+}
+
+.letter-box {
+    background-color: #3b82f6;
+    color: white;
+    border-radius: 4px;
+  
+  /* Flexbox inside the grid item just to center the text perfectly */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+  /* Dynamic font sizing so text scales down on small mobile screens */
+    font-size: clamp(1.65rem, 1vw, 1.9rem);
+    padding: 2px;
+}
+
+.green {
+  background-color: green;
+}
+
+.yellow {
+  background-color: yellow;
+}
+
+.red {
+  background-color: red;
+}
+
+.gray {
+  background-color: gray;
+}
