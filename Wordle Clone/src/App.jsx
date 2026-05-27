@@ -1,46 +1,100 @@
 import { useState } from 'react'
+import { useEffect } from 'react'
 import './App.css'
 
 import MainGrid from './MainGrid/MainGrid.jsx'
 import Keyboard from './Keyboard/Keyboard.jsx'
 
 function App() {
-  const [pastGuesses, setPastGuesses] = useState([[{letter: "A", color: "gray"}, {letter: "P", color: "gray"}, {letter: "P", color: "gray"}, {letter: "L", color: "gray"}, {letter: "E", color: "gray"}], [{letter: "W", color: "green"}, {letter: "O", color: "green"}, {letter: "R", color: "green"}, {letter: "D", color: "green"}, {letter: "S", color: "yellow"}]])
-  const [currentGuess, setCurrentGuess] = useState([])
-  const [solution, setSolution] = useState(["j", "e", "n", "n", "a"])
+  const emptyBoard = [[{letter: '', color: 'gray'}, {letter: '', color: 'gray'}, {letter: '', color: 'gray'}, {letter: '', color: 'gray'}, {letter: '', color: 'gray'}],
+                      [{letter: '', color: 'gray'}, {letter: '', color: 'gray'}, {letter: '', color: 'gray'}, {letter: '', color: 'gray'}, {letter: '', color: 'gray'}],
+                      [{letter: '', color: 'gray'}, {letter: '', color: 'gray'}, {letter: '', color: 'gray'}, {letter: '', color: 'gray'}, {letter: '', color: 'gray'}],
+                      [{letter: '', color: 'gray'}, {letter: '', color: 'gray'}, {letter: '', color: 'gray'}, {letter: '', color: 'gray'}, {letter: '', color: 'gray'}],
+                      [{letter: '', color: 'gray'}, {letter: '', color: 'gray'}, {letter: '', color: 'gray'}, {letter: '', color: 'gray'}, {letter: '', color: 'gray'}],
+                      [{letter: '', color: 'gray'}, {letter: '', color: 'gray'}, {letter: '', color: 'gray'}, {letter: '', color: 'gray'}, {letter: '', color: 'gray'}]]
+
+  const [pastGuesses, setPastGuesses] = useState(emptyBoard)
+  const [currentGuess, setCurrentGuess] = useState("")
+  const [solution, setSolution] = useState(["J", "E", "N", "N", "A"])
+  const [guessCount, setGuessCount] = useState(0)
+  useEffect(() => {
+    console.log(currentGuess)
+    console.log(pastGuesses)
+  }, [currentGuess, pastGuesses])
+
+  useEffect(() => {
+  const handleKeyDown = (event) => {
+    if (event.repeat) return
+    const key = event.key.toUpperCase()
+    // letters
+    if (/^[A-Z]$/.test(key)) {
+      if (currentGuess.length < 5) {
+        editGuess(key)
+      }
+    }
+    // backspace
+    else if (event.key === "Backspace") {
+      editGuess("BACKSPACE")
+    }
+    // enter
+    else if (event.key === "Enter") {
+      editGuess("ENTER")
+    }
+  }
+
+  window.addEventListener("keydown", handleKeyDown)
+
+  return () => {
+    window.removeEventListener("keydown", handleKeyDown)
+  }
+}, [currentGuess])
+  
+  const editGuess = (input) => {
+    if (input !== "BACKSPACE" && input !== "ENTER") {
+      if (currentGuess.length < 5) {
+      setCurrentGuess((currentGuess) => currentGuess + input)
+      }
+    }
+    else if (input === "BACKSPACE") {
+      setCurrentGuess((currentGuess) => currentGuess.substring(0, currentGuess.length - 1))
+    }
+    else if (input === "ENTER" && currentGuess.length === 5) {
+        setCurrentGuess("")
+        enterWord(currentGuess)
+    }
+  }
   
   //guess = [{letter: 'A', color: 'gray'}, {letter: 'A', color: 'gray'}, {letter: 'A', color: 'gray'}, {letter: 'A', color: 'gray'}, {letter: 'A', color: 'gray'}]
   const enterWord = (guess) => {
-    //ai code check make sure u understand it
-    if (!guess || guess.length !== 5) {
+    if (guessCount === 6) {
       return
     }
-    const normalizedGuess = [...guess].map((item) => (
-      typeof item === 'object' && item !== null ? item.letter : item
-    ))
-    // initialize object array
+    const normalizedGuess = [...guess];
     const letterArray = normalizedGuess.map((letter) => ({ letter, color: 'gray' }))
-    //end ai code
+
     // letter count registry
     const wordMap = new Map()
     for (let i = 0; i < 5; i++) {
-      let letter = letterArray[i].letter
+      let letter = solution[i]
       if (!wordMap.has(letter)) {
         wordMap.set(letter, 1)
       }
       else {
         wordMap.set(letter, wordMap.get(letter) + 1)
       }
+      console.log(wordMap)
     }
     //first loop to check for greens
     for (let i = 0; i < 5; i++) {
       let letter = letterArray[i].letter
-      if (letter === solution[i]) {
+      console.log(`Letter: ${letter} solution letter: ${solution[i]}`)
+      if (letter === solution[i] && wordMap.get(letter) > 0) {
         wordMap.set(letter, wordMap.get(letter) - 1)
-        letterArray[i] = {letter: letter, color: "green"}
+        letterArray[i] = {letter, color: "green"}
       }
     }
     //second loop to check for yellows
+    console.log(wordMap)
     for (let i = 0; i < 5; i++) {
       let letter = letterArray[i].letter
       if (letterArray[i].color === "green") {
@@ -48,17 +102,19 @@ function App() {
       }
       else if (solution.includes(letter) && wordMap.get(letter) > 0) {
         wordMap.set(letter, wordMap.get(letter) - 1)
-        letterArray[i] = {letter: letter, color: "yellow"}
+        letterArray[i] = {letter, color: "yellow"}
       }
     }
-
-    setPastGuesses((currentHistory) => [...currentHistory, letterArray])
+    setPastGuesses((currentHistory) => (
+      currentHistory.map((array, index) => index === guessCount ? letterArray : array)
+    ))
+    setGuessCount((currentGuessCount) => currentGuessCount + 1)
   }
 
   return (
     <>
       <MainGrid pastGuesses={pastGuesses} solution={solution}/>
-      <Keyboard currentGuess={"jenan"} onEnter={enterWord}/>
+      <Keyboard onKeyPress={editGuess}/>
     </>
   )
 }
