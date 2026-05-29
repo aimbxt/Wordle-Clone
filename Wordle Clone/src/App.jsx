@@ -15,7 +15,7 @@ function App() {
 
   const [pastGuesses, setPastGuesses] = useState(emptyBoard)
   const [currentGuess, setCurrentGuess] = useState("")
-  const [solution, setSolution] = useState(["J", "E", "N", "N", "A"])
+  const [solution, setSolution] = useState(["A", "P", "P", "L", "E"])
   const [guessCount, setGuessCount] = useState(0)
   useEffect(() => {
     console.log(currentGuess)
