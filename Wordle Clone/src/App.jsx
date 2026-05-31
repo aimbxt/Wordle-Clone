@@ -113,7 +113,7 @@ function App() {
 
   return (
     <>
-      <MainGrid pastGuesses={pastGuesses} solution={solution}/>
+      <MainGrid pastGuesses={pastGuesses} solution={solution} guessIndex={guessCount} currentGuess={currentGuess}/>
       <Keyboard onKeyPress={editGuess}/>
     </>
   )
