@@ -4,6 +4,7 @@ import './App.css'
 
 import MainGrid from './MainGrid/MainGrid.jsx'
 import Keyboard from './Keyboard/Keyboard.jsx'
+import PopUp from './PopUp/PopUp.jsx'
 
 function App() {
   const emptyBoard = [[{letter: '', color: 'gray'}, {letter: '', color: 'gray'}, {letter: '', color: 'gray'}, {letter: '', color: 'gray'}, {letter: '', color: 'gray'}],
@@ -15,12 +16,36 @@ function App() {
 
   const [pastGuesses, setPastGuesses] = useState(emptyBoard)
   const [currentGuess, setCurrentGuess] = useState("")
-  const [solution, setSolution] = useState(["A", "P", "P", "L", "E"])
+  const [solution, setSolution] = useState(["L", "I", "G", "H", "T"])
   const [guessCount, setGuessCount] = useState(0)
+  const [isOpen, setIsOpen] = useState(false)
+  
+
+  const isWin = () => {
+    if (guessCount === 0) {
+      return false
+    }
+    const guess = pastGuesses[guessCount - 1]
+    return guess.every((object, i) => (object.letter === solution[i]))
+  }
+  
   useEffect(() => {
+    let temp = Math.max(0, guessCount - 1)
     console.log(currentGuess)
     console.log(pastGuesses)
-  }, [currentGuess, pastGuesses])
+    console.log(`isOpen: ${isOpen}`)
+    console.log(`isWin: ${isWin()}`)
+    console.log(pastGuesses[temp])
+  }, [currentGuess, pastGuesses, isOpen, isWin])
+
+  useEffect(() => {
+    if (guessCount === 6 || isWin()) {
+      setIsOpen(true);
+    }
+    else {
+      setIsOpen(false);
+    }
+  }, [guessCount, pastGuesses]);
 
   useEffect(() => {
   const handleKeyDown = (event) => {
@@ -50,15 +75,15 @@ function App() {
 }, [currentGuess])
   
   const editGuess = (input) => {
-    if (input !== "BACKSPACE" && input !== "ENTER") {
+    if (input !== "BACKSPACE" && input !== "ENTER" && !isWin()) {
       if (currentGuess.length < 5) {
       setCurrentGuess((currentGuess) => currentGuess + input)
       }
     }
-    else if (input === "BACKSPACE") {
+    else if (input === "BACKSPACE" && !isWin()) {
       setCurrentGuess((currentGuess) => currentGuess.substring(0, currentGuess.length - 1))
     }
-    else if (input === "ENTER" && currentGuess.length === 5) {
+    else if (input === "ENTER" && currentGuess.length === 5 && !isWin()) {
         setCurrentGuess("")
         enterWord(currentGuess)
     }
@@ -66,7 +91,7 @@ function App() {
   
   //guess = [{letter: 'A', color: 'gray'}, {letter: 'A', color: 'gray'}, {letter: 'A', color: 'gray'}, {letter: 'A', color: 'gray'}, {letter: 'A', color: 'gray'}]
   const enterWord = (guess) => {
-    if (guessCount === 6) {
+    if (guessCount === 6 || isWin()) {
       return
     }
     const normalizedGuess = [...guess];
@@ -111,10 +136,15 @@ function App() {
     setGuessCount((currentGuessCount) => currentGuessCount + 1)
   }
 
+
+
   return (
     <>
       <MainGrid pastGuesses={pastGuesses} solution={solution} guessIndex={guessCount} currentGuess={currentGuess}/>
       <Keyboard onKeyPress={editGuess}/>
+      <PopUp isOpen={isOpen} onClose={() => setIsOpen(false)} >
+        {isWin() ? <h1>You won! <br /><br /><br /> Guesses: {guessCount}</h1>: <h1>Try again!</h1>}
+      </PopUp>
     </>
   )
 }
