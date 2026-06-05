@@ -9,7 +9,8 @@ export default function MainGrid({pastGuesses, solution, guessIndex, currentGues
             {pastGuesses.map((word, wordIndex) => (
               [...word].map((letter, letterIndex) => {
                 if (wordIndex === guessIndex) {
-                  return (<div key={`${wordIndex}-${letterIndex}`} className={`letter-box gray`}>{[...currentGuess][letterIndex]}</div>)
+                  const isLastLetter = letterIndex === currentGuess.length - 1 && currentGuess.length > 0
+                  return (<div key={`${wordIndex}-${letterIndex}`} className={`letter-box currentGuess ${isLastLetter ? 'pop-animation': ''}`}>{[...currentGuess][letterIndex]}</div>)
                 }
                 else {
                   return (<div key={`${wordIndex}-${letterIndex}`} className={`letter-box ${letter.color}`}>{letter.letter}</div>);

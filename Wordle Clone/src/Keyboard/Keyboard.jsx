@@ -1,6 +1,6 @@
 import './Keyboard.css';
 
-export default function Keyboard({onKeyPress}) {
+export default function Keyboard({onKeyPress, letterStatus}) {
     const KEYBOARD_LAYOUT = [
         ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
         ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
@@ -11,7 +11,7 @@ export default function Keyboard({onKeyPress}) {
         {KEYBOARD_LAYOUT.map((row, rowIndex) => (
             <div className="keyboard-row" key={rowIndex}>
                 {row.map((key, keyIndex) => (
-                <button onClick={() => onKeyPress(key)} className="key" key={`${rowIndex}-${keyIndex}`}>
+                <button onClick={() => onKeyPress(key)} className={`key ${letterStatus[key]}`} key={`${rowIndex}-${keyIndex}`}>
                     {key === 'BACKSPACE' ? '⌫' : key}
                 </button>
             ))}

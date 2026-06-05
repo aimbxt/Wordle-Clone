@@ -23,7 +23,7 @@
 }
 
 .letter-box {
-    background-color: #3b82f6;
+    background-color: lightgray;
     color: white;
     border-radius: 4px;
   
@@ -34,7 +34,29 @@
   
   /* Dynamic font sizing so text scales down on small mobile screens */
     font-size: clamp(1.65rem, 1vw, 1.9rem);
+    font-weight: bold;
     padding: 2px;
+}
+
+.pop-animation {
+  animation: popEffect 0.3s ease-out;
+}
+
+@keyframes popEffect {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15); /* Pop up */
+  }
+  100% {
+    transform: scale(1); /* Return to normal size */
+  }
+}
+
+.currentGuess {
+  color: black !important;
+  background-color: lightgray;
 }
 
 .green {

@@ -39,3 +39,15 @@
   min-width: 80px;
 }
 
+.key.gray {
+  background-color: gray;
+}
+
+.key.yellow {
+  background-color: yellow;
+}
+
+.key.green {
+  background-color: green;
+}
+
