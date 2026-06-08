@@ -133,6 +133,7 @@ function App() {
 
   return (
     <>
+      <h1>WORDLE</h1>
       <MainGrid pastGuesses={pastGuesses} guessIndex={guessCount} currentGuess={currentGuess} invalidGuess={invalidGuess}/>
       <Keyboard onKeyPress={editGuess} letterStatus={letterStatus}/>
       <PopUp isOpen={isOpen} onClose={() => setIsOpen(false)} >

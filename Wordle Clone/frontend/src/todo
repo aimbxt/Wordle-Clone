@@ -1,4 +1,5 @@
 -grey out already used characters (DONE)
--validate words against a word database
--pull solutions from a word database
+-validate words against a word database (DONE)
+-pull solutions from a word database (DONE)
 -add modes- daily, randomized word everyday, or workthrough previous days ? 
+-add user login system, track streaks
