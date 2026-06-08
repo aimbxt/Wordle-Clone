@@ -33,6 +33,7 @@ function App() {
 
   useEffect(() => {
     const handleKeyDown = (event) => {
+      if (guessCount === 6 || isWin) return
       if (event.repeat) return
       const key = event.key.toUpperCase()
       // letters
@@ -56,7 +57,7 @@ function App() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown)
     }
-  }, [currentGuess])
+  }, [currentGuess, guessCount, isWin])
 
   const letterStatus = useMemo(() => {
     const status = {}
@@ -89,6 +90,9 @@ function App() {
   }, [currentGuess, pastGuesses, isOpen, isWin, letterStatus])
   
   const editGuess = (input) => {
+    if (isWin || guessCount === 6) {
+      return;
+    }
     if (input !== "BACKSPACE" && input !== "ENTER" && !isWin) {
       if (currentGuess.length < 5) {
       setCurrentGuess((currentGuess) => currentGuess + input)
