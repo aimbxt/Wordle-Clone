@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const port = 3000;
+const { getDailySolution, checkWord } = require("./solution_generator.js")
 
 app.use(cors())
 app.use(express.json())
@@ -18,9 +19,13 @@ app.listen(port, () => {
 
 app.post('/api/guess', (req, res) => {
     const { guess } = req.body
-    const solution = ["A", "P", "P", "L", "E"]
+    const guessToString = guess.join('').toLowerCase()
+    console.log(checkWord(guessToString))
+    if (!checkWord(guessToString)) {
+        return res.status(400).json({error: 'Not a valid word'})
+    }
+    const solution = getDailySolution().split('')
     const letterArray = guess.map((letter) => ({ letter, color: 'gray' }))
-    const isWin = letterArray.every((object, i) => (object.letter === solution[i]))
 
     // letter count registry
     const wordMap = new Map()
@@ -54,6 +59,7 @@ app.post('/api/guess', (req, res) => {
         letterArray[i] = {letter, color: "yellow"}
       }
     }
-
-    res.json({letterArray, isWin})
+    
+    const isWin = letterArray.every((object, i) => (object.letter === solution[i]))
+    return res.json({letterArray, isWin})
 })

@@ -20,12 +20,8 @@ function App() {
   const [isWin, setIsWin] = useState(false)
   const [guessCount, setGuessCount] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
+  const [invalidGuess, setInvalidGuess] = useState(false)
   
-
-  
-  
-  
-
   useEffect(() => {
     if (guessCount === 6 || isWin) {
       setIsOpen(true);
@@ -113,30 +109,31 @@ function App() {
       return
     }
 
-    try {
-      const response = await fetch('/api/guess', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({guess : [...guess]})
-      })
+    const response = await fetch('/api/guess', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({guess : [...guess.toLowerCase()]})
+    })
 
-      const {letterArray, isWin: guessIsWin} = await response.json()
-      setIsWin(guessIsWin)
-      setPastGuesses((currentHistory) => (
-        currentHistory.map((array, index) => index === guessCount ? letterArray : array)
-      ))
-      setGuessCount((currentGuessCount) => currentGuessCount + 1)
-  
-    } catch (error) {
-      console.error('Error submitting guess')
+    const {letterArray, isWin: guessIsWin} = await response.json()
+
+    if (!response.ok) {
+      setInvalidGuess(true)
+      setTimeout(() => setInvalidGuess(false), 300)
+      return
     }
+    setIsWin(guessIsWin)
+    setPastGuesses((currentHistory) => (
+      currentHistory.map((array, index) => index === guessCount ? letterArray : array)
+    ))
+    setGuessCount((currentGuessCount) => currentGuessCount + 1)
   }
 
 
 
   return (
     <>
-      <MainGrid pastGuesses={pastGuesses} guessIndex={guessCount} currentGuess={currentGuess}/>
+      <MainGrid pastGuesses={pastGuesses} guessIndex={guessCount} currentGuess={currentGuess} invalidGuess={invalidGuess}/>
       <Keyboard onKeyPress={editGuess} letterStatus={letterStatus}/>
       <PopUp isOpen={isOpen} onClose={() => setIsOpen(false)} >
         {isWin ? <h1>You won! <br /><br /><br /> Guesses: {guessCount}</h1>: <h1>Try again!</h1>}
