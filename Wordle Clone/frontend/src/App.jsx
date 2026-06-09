@@ -63,15 +63,17 @@ function App() {
     const status = {}
     pastGuesses.forEach((word) => {
       word.forEach((letter) => {
-        const currentStatus = status[letter.letter]
+        if (!letter || !letter.letter) return
+        const key = letter.letter.toUpperCase()
+        const currentStatus = status[key]
         if (letter.color === "green") {
-          status[letter.letter] = "green"
+          status[key] = "green"
         }
         else if (letter.color === "yellow" && currentStatus !== "green") {
-          status[letter.letter] = "yellow"
+          status[key] = "yellow"
         }
         else if (letter.color === "gray" && currentStatus !== "green" && currentStatus !== "yellow") {
-          status[letter.letter] = "gray"
+          status[key] = "gray"
         }
       })
     })
