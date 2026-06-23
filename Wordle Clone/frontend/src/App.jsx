@@ -21,6 +21,7 @@ function App() {
   const [guessCount, setGuessCount] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
   const [invalidGuess, setInvalidGuess] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
   
   useEffect(() => {
     if (guessCount === 6 || isWin) {
@@ -140,11 +141,19 @@ function App() {
   return (
     <>
       <h1>WORDLE</h1>
-      <MainGrid pastGuesses={pastGuesses} guessIndex={guessCount} currentGuess={currentGuess} invalidGuess={invalidGuess}/>
-      <Keyboard onKeyPress={editGuess} letterStatus={letterStatus}/>
-      <PopUp isOpen={isOpen} onClose={() => setIsOpen(false)} >
-        {isWin ? <h1>You won! <br /><br /><br /> Guesses: {guessCount}</h1>: <h1>Try again!</h1>}
-      </PopUp>
+      {isAuthenticated ? 
+      <div> 
+        <MainGrid pastGuesses={pastGuesses} guessIndex={guessCount} currentGuess={currentGuess} invalidGuess={invalidGuess}/>
+        <Keyboard onKeyPress={editGuess} letterStatus={letterStatus}/>
+        <PopUp isOpen={isOpen} onClose={() => setIsOpen(false)} >
+          {isWin ? <h1>You won! <br /><br /><br /> Guesses: {guessCount}</h1>: <h1>Try again!</h1>}
+        </PopUp>
+      </div>:
+      
+      <div>
+        
+      </div>}
+      
     </>
   )
 }
