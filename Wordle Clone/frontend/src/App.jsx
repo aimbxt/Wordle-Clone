@@ -6,6 +6,7 @@ import './App.css'
 import MainGrid from './MainGrid/MainGrid.jsx'
 import Keyboard from './Keyboard/Keyboard.jsx'
 import PopUp from './PopUp/PopUp.jsx'
+import LoginPage from './LoginPage/LoginPage.jsx'
 
 function App() {
   const emptyBoard = [[{letter: '', color: 'lightgray'}, {letter: '', color: 'lightgray'}, {letter: '', color: 'lightgray'}, {letter: '', color: 'lightgray'}, {letter: '', color: 'lightgray'}],
@@ -59,6 +60,32 @@ function App() {
       window.removeEventListener("keydown", handleKeyDown)
     }
   }, [currentGuess, guessCount, isWin])
+
+  const loginUser = async (username, password) => {
+    try {
+      const response = await fetch('/api/user/login', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({username, password})
+      })
+
+      if (!response.ok) {
+        setIsAuthenticated(false)
+        throw new Error("invalid login")
+      }
+
+      const {authenticated} = await response.json()
+      setIsAuthenticated(authenticated)
+      if (!authenticated) {throw new Error("invalid login credentials")}
+
+      return authenticated
+    }
+    catch (err) {
+      setIsAuthenticated(false);
+      throw err;
+    }
+    
+  }
 
   const letterStatus = useMemo(() => {
     const status = {}
@@ -151,7 +178,7 @@ function App() {
       </div>:
       
       <div>
-        
+        <LoginPage loginUser={loginUser}/>
       </div>}
       
     </>
