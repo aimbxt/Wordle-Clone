@@ -4,7 +4,9 @@ const app = express();
 const port = 3000;
 const { getDailySolution, checkWord } = require("./solution_generator.js")
 
-app.use(cors())
+app.use(cors({
+  credentials: true
+}))
 app.use(express.json())
 app.get('/', (req, res) => {
   res.send('Hello World!');
@@ -16,6 +18,14 @@ app.get('/user', (req, res) => {
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
+
+app.post('/api/user/login', (req, res) => {
+
+})
+
+app.post('api/user/register', (req, res) => {
+
+})
 
 app.post('/api/guess', (req, res) => {
     const { guess } = req.body

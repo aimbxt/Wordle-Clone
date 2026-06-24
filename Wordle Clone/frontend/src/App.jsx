@@ -66,7 +66,8 @@ function App() {
       const response = await fetch('/api/user/login', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({username, password})
+        body: JSON.stringify({username, password}),
+        credentials: "include"
       })
 
       if (!response.ok) {
