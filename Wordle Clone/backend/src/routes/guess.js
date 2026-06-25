@@ -1,42 +1,8 @@
-const express = require('express');
-const cors = require('cors');
-const session = require('express-session')
-const app = express();
-const port = 3000;
-const { getDailySolution, checkWord } = require("./solution_generator.js")
+const express = require('express')
+const { getDailySolution, checkWord } = require('../solution_generator')
+const router = express.Router()
 
-app.use(cors({
-  credentials: true
-}))
-app.use(express.json())
-app.use(session({
-  secret: 'secret',
-  saveUninitialized: false,
-  resave: false,
-  cookie: {
-    maxAge: 60000 * 60
-  }
-}))
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
-
-app.get('/user', (req, res) => {
-    res.send('got a GET USER request')
-});
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
-
-app.post('/api/user/login', (req, res) => {
-
-})
-
-app.post('api/user/register', (req, res) => {
-
-})
-
-app.post('/api/guess', (req, res) => {
+router.post('/', (req, res) => {
     const { guess } = req.body
     const guessToString = guess.join('').toLowerCase()
     console.log(checkWord(guessToString))
@@ -82,3 +48,5 @@ app.post('/api/guess', (req, res) => {
     const isWin = letterArray.every((object, i) => (object.letter === solution[i]))
     return res.json({letterArray, isWin})
 })
+
+module.exports = router

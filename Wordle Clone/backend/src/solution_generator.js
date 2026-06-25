@@ -1,6 +1,7 @@
 const fs = require('fs')
+const path = require('path')
 
-const words = JSON.parse(fs.readFileSync('./words.json', 'utf8'))
+const words = JSON.parse(fs.readFileSync(path.join(__dirname, '../words.json'), 'utf8'))
 const wordData = words.words
 const wordsSet = new Set(wordData)
 
