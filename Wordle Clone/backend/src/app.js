@@ -5,6 +5,7 @@ const app = express();
 const port = 3000;
 const usersRouter = require('./routes/users')
 const guessRouter = require('./routes/guess')
+const pool = require('./db/database')
 
 app.use(cors({
   credentials: true
