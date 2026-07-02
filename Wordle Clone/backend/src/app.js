@@ -1,12 +1,10 @@
 const express = require('express');
 const cors = require('cors');
 const session = require('express-session')
-const {query, body} = require('express-validator');
 const app = express();
 const port = 3000;
 const usersRouter = require('./routes/users')
 const guessRouter = require('./routes/guess')
-const pool = require('./db/database')
 
 app.use(cors({
   credentials: true
