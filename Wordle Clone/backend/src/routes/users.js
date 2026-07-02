@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const pool = require('../db/database')
-const bcrypt = require('bcrypt')
+const pool = require('../db/database');
+const bcrypt = require('bcrypt');
+const { registerSchema, loginSchema } = require('../validators/userSchemas');
+const validate = require('../validators/validate')
 
 router.get('/test', async (req, res) => {
     try {
@@ -14,7 +16,7 @@ router.get('/test', async (req, res) => {
     }
 })
 
-router.post('/register', async (req, res) => {
+router.post('/register', registerSchema, validate, async (req, res) => {
     const { username, password } = req.body;
 
     if (!username || !password) {
@@ -45,7 +47,7 @@ router.post('/register', async (req, res) => {
     }
 })
 
-router.post('/login', async (req, res) => {
+router.post('/login', loginSchema, validate, async (req, res) => {
     const { username, password } = req.body;
     
     if (!username || !password) {
